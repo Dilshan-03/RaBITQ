@@ -1,0 +1,39 @@
+dataset:
+  name: "synthetic"           # Options: synthetic, gaussian, uniform, sift10k, minilm
+  dim: 256
+  num_vectors: 10000
+  num_queries: 500
+  k: 10
+  seed: 42
+
+algorithms:
+  fp32:
+    enabled: true
+  binary:
+    enabled: true
+  rabitq_1bit:
+    enabled: true
+    query_bits: 4
+  rabitq_multibit:
+    enabled: true
+    bit_width: 2              # Target uniform bit width to compare against ABV-Quant
+    query_bits: 4
+  abv_quant:
+    enabled: true
+    target_bpd: 2.0           # Target bits per dimension
+    importance_metric: "variance" # Options: variance, pca, sensitivity
+    query_bits: 4
+    allowed_bits: [1, 2, 4, 8]
+
+index:
+  use_ivf: false              # When true, uses IVF clustering
+  n_list: 32                  # Number of IVF clusters / inverted lists
+  n_probe: 4                  # Number of clusters probed per query
+  use_reranking: true         # Theoretical bound pruning + FP32 re-ranking
+  epsilon_0: 1.9              # Confidence multiplier for error bound pruning
+  rerank_factor: 5            # Number of candidates retrieved before re-ranking (factor * k)
+
+visualization:
+  output_dir: "results"
+  dpi: 300
+  save_plots: true
